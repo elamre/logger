@@ -5,7 +5,7 @@ A simple logger that can log to network, file and terminal output. Ansii colouri
 
 Loggers can be made within a function or static. Either assigned a name automatically based on the filename, or a given name.
 
-```
+```golang
 // This works 
 var fileNameLogger = logger.NewLogger()
 var namedLogger = logger.NewNamedLogger("Named")
