@@ -1,4 +1,4 @@
-#Simple logger
+# Simple logger
 A simple logger that can log to network, file and terminal output. Ansii colouring enabled. The loggers are all connected to a global settings instance. Enabling debug print of individual loggers. 
 
 ## Usage
