@@ -14,7 +14,7 @@ import (
 )
 
 var onceSettings sync.Once
-var settings LoggerSettings
+var internalSettings LoggerSettings
 
 var utilLog internal.LoggerInterface
 var serverLog internal.LoggerInterface
@@ -75,29 +75,29 @@ func (settings *LoggerSettings) SetSuppressDebug(newSuppressDebug bool) {
 	}
 }
 func init() {
-	settings = newLoggerSettings()
-	utilLog = settings.createLogger("util")
-	serverLog = settings.createLogger("log_server")
-	settings.SetHook(GetDefaultHook())
+	internalSettings = newLoggerSettings()
+	utilLog = internalSettings.createLogger("util")
+	serverLog = internalSettings.createLogger("log_server")
+	internalSettings.SetHook(GetDefaultHook())
 	internal.SetHelperLogger(utilLog)
 }
 
 func GetSettings() *LoggerSettings {
-	return &settings
+	return &internalSettings
 }
 
-func (s *LoggerSettings) Reset() *LoggerSettings {
-	s.file = nil
-	s.panicOnError = true
-	s.suppressDebug = false
-	s.showColor = true
-	s.writer = bufio.NewWriter(os.Stderr)
-	s.loggers = make(map[string]*Logger)
+func (settings *LoggerSettings) Reset() *LoggerSettings {
+	settings.file = nil
+	settings.panicOnError = true
+	settings.suppressDebug = false
+	settings.showColor = true
+	settings.writer = bufio.NewWriter(os.Stderr)
+	settings.loggers = make(map[string]*Logger)
 
-	settings = newLoggerSettings()
-	utilLog = settings.createLogger("util")
-	serverLog = settings.createLogger("log_server")
-	settings.SetHook(GetDefaultHook())
+	internalSettings = newLoggerSettings()
+	utilLog = internalSettings.createLogger("util")
+	serverLog = internalSettings.createLogger("log_server")
+	internalSettings.SetHook(GetDefaultHook())
 	internal.SetHelperLogger(utilLog)
 
 	return GetSettings()
@@ -194,7 +194,7 @@ func (settings *LoggerSettings) output(loggerName string, format string) {
 	caller := strings.Split(runtime.FuncForPC(pc).Name(), "/")
 
 	settings.loggerHook(now, loggerName, fmt.Sprintf("[%s:%d] ", caller[len(caller)-1], line), format)
-	//settings.loggerHook(printString)
+	//internalSettings.loggerHook(printString)
 }
 
 func (settings *LoggerSettings) Close() {

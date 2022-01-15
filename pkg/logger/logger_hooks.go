@@ -14,7 +14,7 @@ func GetDefaultServerHook() HookFunc {
 func (settings *LoggerSettings) serverHook(now time.Time, loggerName string, fileName string, format string) {
 	if settings.server.IsConnected() {
 		if err := settings.server.SendMessageGob(now, loggerName, fileName, format); err != nil {
-			//if err := settings.server.SendMessage(internal.FormatString(now, loggerName, fileName, format)); err != nil {
+			//if err := internalSettings.server.SendMessage(internal.FormatString(now, loggerName, fileName, format)); err != nil {
 			settings.SetHook(GetDefaultHook())
 			utilLog.LogWarningf("something went wrong with writing to the server: %s\n\tdisabling server", err.Error()) // TODO
 			settings.defaultHook(now, loggerName, fileName, format)
@@ -36,7 +36,7 @@ func (settings *LoggerSettings) defaultHook(now time.Time, loggerName string, fi
 
 func GetDefaultHook() HookFunc {
 	GetSettings().writer = bufio.NewWriter(os.Stderr)
-	return settings.defaultHook
+	return internalSettings.defaultHook
 }
 
 func (settings *LoggerSettings) fileHook(now time.Time, loggerName string, fileName string, format string) {
